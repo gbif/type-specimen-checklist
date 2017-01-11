@@ -42,11 +42,16 @@ public class NameParserUDF extends GenericUDF {
     return PrimitiveObjectInspectorFactory.javaStringObjectInspector;
   }
 
+  private static String str(ObjectInspectorConverters.Converter converter, DeferredObject deferred) throws HiveException {
+    Object obj = deferred.get();
+    return obj == null ? null : converter.convert(obj).toString();
+  }
+
   public Object evaluate(GenericUDF.DeferredObject[] arguments) throws HiveException {
     assert arguments.length == ARG_LENGTH;
 
-    String sciname = converters[0].convert(arguments[0].get()).toString();
-    String author = converters[1].convert(arguments[1].get()).toString();
+    String sciname = str(converters[0], arguments[0]);
+    String author = str(converters[1], arguments[1]);
 
     try {
       ParsedName pn = PARSER.parse(sciname);

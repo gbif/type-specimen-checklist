@@ -9,6 +9,10 @@
         <name>oozie.launcher.mapreduce.task.classpath.user.precedence</name>
         <value>true</value>
       </property>
+      <property>
+        <name>log4j.appender.CLA.layout</name>
+        <value>org.apache.log4j.SimpleLayout</value>
+      </property>
     </configuration>
   </global>
 
