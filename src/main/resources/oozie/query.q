@@ -26,8 +26,3 @@ CREATE TABLE type_specimen_taxa ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
     o.v_kingdom, o.v_phylum, o.v_class, o.v_order, o.v_family, CONCAT("http://www.gbif.org/occurrence/", o.gbifid) AS link
   FROM occurrence_hdfs o JOIN type_specimen_ids s ON o.gbifid=s.gbifid
   WHERE s.nameComplete != NULL;
-
-
-
-
-add JAR /tmp/tt.py;
