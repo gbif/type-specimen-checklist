@@ -1,5 +1,4 @@
-<#-- Required syntax to escape Hive parameters. Outputs "USE ${hiveDB};" -->
-USE ${r"${hiveDB}"};
+USE ${hiveDB};
 
 -- setup for our custom, combinable deflated compression
 SET hive.exec.compress.output=true;
