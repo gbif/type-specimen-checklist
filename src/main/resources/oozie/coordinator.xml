@@ -1,0 +1,26 @@
+<coordinator-app name="TypeSpecimenDwcaBuilder-${environment}" frequency="${coord:days(coordFrequency)}"
+                 start="${startTime}" end="2050-01-01T00:00Z" timezone="UTC" xmlns="uri:oozie:coordinator:0.2">
+  <action>
+    <workflow>
+      <app-path>${namenode}/type-specimen-dwca-builder-${environment}/</app-path>
+      <configuration>
+        <property>
+          <name>environment</name>
+          <value>${environment}</value>
+        </property>
+        <property>
+          <name>hiveDB</name>
+          <value>${hiveDB}</value>
+        </property>
+        <property>
+          <name>hadoop.jobtracker</name>
+          <value>${jobtracker}</value>
+        </property>
+        <property>
+          <name>hdfs.namenode</name>
+          <value>${namenode}</value>
+        </property>
+      </configuration>
+    </workflow>
+  </action>
+</coordinator-app>

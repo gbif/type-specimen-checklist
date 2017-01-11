@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<workflow-app name="${occurrence.environment}-type-specimen-dwca-builder" xmlns="uri:oozie:workflow:0.4.5">
+
+  <global>
+    <job-tracker>${wf:conf("jobtracker")}</job-tracker>
+    <name-node>${wf:conf("namenode")}</name-node>
+    <configuration>
+      <property>
+        <name>oozie.launcher.mapreduce.task.classpath.user.precedence</name>
+        <value>true</value>
+      </property>
+    </configuration>
+  </global>
+
+  <start to="query"/>
+
+  <action name="query">
+    <hive xmlns="uri:oozie:hive-action:0.4">
+      <!-- we only put static defaults here -->
+      <job-xml>conf/hive-default.xml</job-xml>
+      <configuration>
+        <property>
+          <name>hive.metastore.uris</name>
+          <value>${wf:conf("hiveMetastore")}</value>
+        </property>
+      </configuration>
+      <script>query.q</script>
+      <param>hiveDB=${wf:conf("hiveDB")}</param>
+    </hive>
+    <ok to="dwca"/>
+    <error to="kill"/>
+  </action>
+
+  <action name="dwca">
+    <java>
+      <main-class>org.gbif.occurrence.typespecimenchecklist.TypeSpecimenChecklistBuilder</main-class>
+      <arg>${wf:conf("environment")}.properties</arg>
+    </java>
+
+    <ok to="end"/>
+    <error to="kill"/>
+  </action>
+
+  <kill name="kill">
+    <message>Type specimen DwC-A builder failed:[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill>
+
+  <end name="end"/>
+
+</workflow-app>
