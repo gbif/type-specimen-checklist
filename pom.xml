@@ -86,7 +86,7 @@
       </resource>
     </resources>
     <plugins>
-      <!-- Assembly to create coordinator job -->
+      <!-- Assembly to create coordinator/workflow job -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
@@ -103,6 +103,24 @@
             <goals>
               <goal>single</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- shaded jar to use UDFs independently -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${maven-shade-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <finalName>${artifactId}-shaded.jar</finalName>
+            </configuration>
           </execution>
         </executions>
       </plugin>
