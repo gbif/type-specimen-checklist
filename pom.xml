@@ -119,7 +119,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <finalName>${artifactId}-shaded.jar</finalName>
+              <finalName>${project.artifactId}-shaded</finalName>
             </configuration>
           </execution>
         </executions>
