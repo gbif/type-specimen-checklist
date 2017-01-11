@@ -11,14 +11,13 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
-import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Resources;
 import freemarker.cache.ClassTemplateLoader;
@@ -27,7 +26,6 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
@@ -79,22 +77,18 @@ public class TypeSpecimenChecklistBuilder {
   }
 
   private void addTaxonEntry(ModalZipOutputStream zos) throws IOException {
-    //Get all the files inside the directory and creates a list of InputStreams.
-    D2CombineInputStream in =
-        new D2CombineInputStream(Lists.transform(Lists.newArrayList(fs.listStatus(hiveTable)),
-            new Function<FileStatus, InputStream>() {
-              @Nullable
-              @Override
-              public InputStream apply(@Nullable FileStatus input) {
-                try {
-                  return fs.open(input.getPath());
-                } catch (IOException ex) {
-                  throw Throwables.propagate(ex);
-                }
-              }
-            }));
     ZipEntry ze = new ZipEntry(Paths.get("taxon.tsv").toString());
     zos.putNextEntry(ze, ModalZipOutputStream.MODE.PRE_DEFLATED);
+    //Get all the files inside the directory and creates a list of InputStreams.
+    D2CombineInputStream in = new D2CombineInputStream(
+        Arrays.stream(fs.listStatus(hiveTable))
+            .map(st -> {
+                  try {
+                    return fs.open(st.getPath());
+                  } catch (IOException ex) {
+                    throw Throwables.propagate(ex);
+                  }
+                }).collect(Collectors.toList()));
     ByteStreams.copy(in, zos);
     in.close(); // required to get the sizes
     ze.setSize(in.getUncompressedLength()); // important to set the sizes and CRC

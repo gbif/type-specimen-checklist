@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS type_specimen_taxa;
 CREATE TABLE type_specimen_ids
 AS SELECT canonicalNameComplete(v_scientificName, v_scientificNameAuthorship) AS nameComplete, min(gbifid) AS gbifid
   FROM occurrence_hdfs
-  WHERE typeStatus != null AND v_scientificName RLIKE '^[A-Z][a-z]'
+  WHERE typeStatus IS NOT NULL AND v_scientificName RLIKE '^[A-Z][a-z]'
   GROUP BY 1;
 
 -- create filtered type specimen table so it can be used in the multi-insert
