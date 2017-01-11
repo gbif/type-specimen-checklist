@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
@@ -19,6 +20,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Resources;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -68,9 +70,9 @@ public class TypeSpecimenChecklistBuilder {
       addResourceEntry(zos, "meta.xml");
       addTaxonEntry(zos);
 
-    } catch (Exception ex) {
+    } catch (RuntimeException ex) {
       LOG.error("Failed to zip archive", ex);
-      throw Throwables.propagate(ex);
+      throw ex;
     }
 
     LOG.info("Finished building type specimen checklist DwC-A");
@@ -125,8 +127,9 @@ public class TypeSpecimenChecklistBuilder {
     ZipEntry ze = new ZipEntry(resourceName);
     zos.putNextEntry(ze, ModalZipOutputStream.MODE.DEFAULT);
 
-    try (InputStream meta = getClass().getResourceAsStream(resourceName)) {
-      ByteStreams.copy(meta, zos);
+    URL resUrl = Resources.getResource(resourceName);
+    try (InputStream res = resUrl.openStream()) {
+      ByteStreams.copy(res, zos);
       zos.closeEntry();
     }
   }
