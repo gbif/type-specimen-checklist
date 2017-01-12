@@ -13,6 +13,10 @@
           <value>${hiveDB}</value>
         </property>
         <property>
+          <name>hiveMetastore</name>
+          <value>${hiveMetastore}</value>
+        </property>
+        <property>
           <name>hadoop.jobtracker</name>
           <value>${jobtracker}</value>
         </property>
