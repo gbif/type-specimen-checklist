@@ -41,12 +41,12 @@ public class TypeSpecimenChecklistBuilder {
   private final Configuration cfg;
   private final FileSystem fs;
   private final Path dwcaFile;
-  private final Path hiveTable;
+  private final Path hiveTablePath;
 
   public TypeSpecimenChecklistBuilder(FileSystem fs, Path dwcaFile, String hiveDB) {
     this.fs = fs;
     this.dwcaFile = dwcaFile;
-    this.hiveTable = hivePath(hiveDB, "type_specimen_taxa");
+    this.hiveTablePath = hivePath(hiveDB, "type_specimen_taxa");
     cfg = new Configuration();
     cfg.setTemplateLoader(new ClassTemplateLoader(TypeSpecimenChecklistBuilder.class, "/templates"));
   }
@@ -81,7 +81,7 @@ public class TypeSpecimenChecklistBuilder {
     zos.putNextEntry(ze, ModalZipOutputStream.MODE.PRE_DEFLATED);
     //Get all the files inside the directory and creates a list of InputStreams.
     D2CombineInputStream in = new D2CombineInputStream(
-        Arrays.stream(fs.listStatus(hiveTable))
+        Arrays.stream(fs.listStatus(hiveTablePath))
             .map(st -> {
                   try {
                     return fs.open(st.getPath());
@@ -95,6 +95,7 @@ public class TypeSpecimenChecklistBuilder {
     ze.setCompressedSize(in.getCompressedLength());
     ze.setCrc(in.getCrc32());
     zos.closeEntry();
+    LOG.info("Copied {} compressed bytes (uncompressed={}) from taxon hive table {}", in.getCompressedLength(), in.getUncompressedLength(), hiveTablePath);
   }
 
   private void addEmlEntry(ModalZipOutputStream zos) throws IOException {
