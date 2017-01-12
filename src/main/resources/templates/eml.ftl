@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.1/eml.xsd" packageId="" system="http://gbif.org" scope="system" xml:lang="en">
     <dataset>
-        <title>GBIF type specimen names</title>
+        <title>GBIF Type Specimen Names</title>
         <creator>
             <individualName>
                 <givenName>Markus</givenName>
