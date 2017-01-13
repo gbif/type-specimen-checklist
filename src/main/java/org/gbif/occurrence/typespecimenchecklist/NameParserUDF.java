@@ -4,6 +4,7 @@ import org.gbif.api.exception.UnparsableException;
 import org.gbif.api.model.checklistbank.ParsedName;
 import org.gbif.api.service.checklistbank.NameParser;
 import org.gbif.nameparser.GBIFNameParser;
+import org.gbif.utils.text.StringUtils;
 
 import com.google.common.base.Strings;
 import org.apache.hadoop.hive.ql.exec.Description;
@@ -50,8 +51,8 @@ public class NameParserUDF extends GenericUDF {
   public Object evaluate(GenericUDF.DeferredObject[] arguments) throws HiveException {
     assert arguments.length == ARG_LENGTH;
 
-    String sciname = str(converters[0], arguments[0]);
-    String author = str(converters[1], arguments[1]);
+    String sciname = StringUtils.decodeUtf8Garbage(str(converters[0], arguments[0]));
+    String author = StringUtils.decodeUtf8Garbage(str(converters[1], arguments[1]));
 
     try {
       ParsedName pn = PARSER.parse(sciname);

@@ -56,6 +56,7 @@
 
     <!-- GBIF VERSIONS -->
     <gbif-api.version>0.48</gbif-api.version>
+    <gbif-common.version>0.32-SNAPSHOT</gbif-common.version>
     <name-parser.version>2.21</name-parser.version>
 
   </properties>
@@ -144,6 +145,11 @@
       <groupId>org.gbif</groupId>
       <artifactId>gbif-api</artifactId>
       <version>${gbif-api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.gbif</groupId>
+      <artifactId>gbif-common</artifactId>
+      <version>${gbif-common.version}</version>
     </dependency>
     <dependency>
       <groupId>org.gbif</groupId>
