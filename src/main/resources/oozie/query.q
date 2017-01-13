@@ -14,15 +14,16 @@ DROP TABLE IF EXISTS type_specimen_taxa;
 
 -- first create a table with just name and gbifid so we can distinct easily on the name
 CREATE TABLE type_specimen_ids
-AS SELECT canonicalNameComplete(v_scientificName, v_scientificNameAuthorship) AS nameComplete, min(gbifid) AS gbifid
+AS SELECT canonicalNameComplete(v_scientificName, v_scientificNameAuthorship) AS nameComplete, min(gbifid) AS gbifid, collect_set(gbifid) AS gbifids
   FROM occurrence_hdfs
-  WHERE typeStatus IS NOT NULL AND v_scientificName RLIKE '^[A-Z][a-z]'
+  WHERE typeStatus IS NOT NULL AND typeStatus NOT IN ('NOTATYPE', 'TYPE_SPECIES', 'TYPE_GENUS') AND v_scientificName RLIKE '^[A-Z][a-z]'
   GROUP BY 1;
 
 -- create filtered type specimen table so it can be used in the multi-insert
 CREATE TABLE type_specimen_taxa ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
   TBLPROPERTIES ("serialization.null.format"="")
   AS SELECT o.gbifid, o.datasetkey, s.nameComplete AS scientificName, o.v_taxonRank,
-    o.v_kingdom, o.v_phylum, o.v_class, o.v_order, o.v_family, CONCAT("http://www.gbif.org/occurrence/", o.gbifid) AS link
+    o.v_kingdom, o.v_phylum, o.v_class, o.v_order, o.v_family, CONCAT("http://www.gbif.org/occurrence/", o.gbifid) AS link,
+    s.gbifids, CONCAT('Derived from GBIF occurrences: ', concat_ws(', ', s.gbifids)) AS remarks
   FROM occurrence_hdfs o JOIN type_specimen_ids s ON o.gbifid=s.gbifid
-  WHERE s.nameComplete != NULL;
+  WHERE s.nameComplete IS NOT NULL;

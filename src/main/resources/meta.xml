@@ -14,5 +14,6 @@
     <field index="7" term="http://rs.tdwg.org/dwc/terms/order"/>
     <field index="8" term="http://rs.tdwg.org/dwc/terms/family"/>
     <field index="9" term="http://purl.org/dc/terms/references"/>
+    <field index="11" term="http://rs.tdwg.org/dwc/terms/taxonRemarks"/>
   </core>
 </archive>
