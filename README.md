@@ -6,8 +6,8 @@ Only names that are parsable with the GBIF Name Parser are included to exclude p
 ## How to run the Oozie workflow once
 To run the workflow use the script [install-workflow](install-workflow.sh)  ```./install-workflow.sh dev gitOAuthToken``` which requires 2 command line parameters:
   
- - profile/environment name: properties file name as is stored in the GBIF configuration repository at the location [https://github.com/gbif/gbif-configuration/tree/master/registry-index-builder](https://github.com/gbif/gbif-configuration/tree/master/type-specimen-dwca-builder).
- - Github OAuth token: Github authentication token to access the private repository [https://github.com/gbif/gbif-configuration/](https://github.com/gbif/gbif-configuration/) where the configuration files are stored.
+ - profile/environment name: properties file name as is stored in the GBIF configuration repository at the location https://github.com/gbif/gbif-configuration/tree/master/type-specimen-dwca-builder.
+ - Github OAuth token: Github authentication token to access the private repository https://github.com/gbif/gbif-configuration/ where the configuration files are stored.
 
 The configuration file used by this workflow requires the following settings:
   
